@@ -81,7 +81,7 @@ export default function RegisterPage() {
 
           <div>
             <label htmlFor="firstName" className="block text-sm font-medium leading-6 text-gray-900">
-              Ім'я
+              Ім&apos;я
             </label>
             <div className="mt-2">
               <input

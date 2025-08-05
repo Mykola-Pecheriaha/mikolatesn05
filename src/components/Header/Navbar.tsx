@@ -1,10 +1,10 @@
 'use client'
 
-import { Fragment, useState } from 'react'
-import { Disclosure, Menu, Transition } from '@headlessui/react'
-import { Bars3Icon, XMarkIcon, SunIcon, MoonIcon, ChevronDownIcon } from '@heroicons/react/24/outline'
+import { useState } from 'react'
 import Link from 'next/link'
 import Logo from './Logo'
+import { Bars3Icon, XMarkIcon, ChevronRightIcon, MoonIcon, SunIcon } from '@heroicons/react/24/outline'
+import { useTheme } from '@/context/ThemeContext'
 
 const navigation = [
   {
@@ -63,134 +63,132 @@ const navigation = [
 ]
 
 export default function Navbar() {
-  const [isDarkMode, setIsDarkMode] = useState(false)
-  const [openSubmenu, setOpenSubmenu] = useState<string | null>(null)
+  const { theme, toggleTheme } = useTheme()
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null)
 
-  const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode)
-    // Тут буде логіка зміни теми
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false)
+    setActiveSubmenu(null)
   }
 
-  const toggleSubmenu = (itemName: string) => {
-    setOpenSubmenu(openSubmenu === itemName ? null : itemName)
+  const handleMenuItemClick = (item: { name: string; submenu?: { name: string; href: string }[] }) => {
+    if (item.submenu) {
+      setActiveSubmenu(activeSubmenu === item.name ? null : item.name)
+    } else {
+      closeMobileMenu()
+    }
   }
 
   return (
-    <Disclosure as="nav" className="bg-white border-b border-gray-200">
-      {({ open }) => (
-        <>
-          <div className="container-custom">
-            <div className="flex h-16 justify-between">
-              <div className="flex">
-                <div className="flex flex-shrink-0 items-center">
-                  <Logo />
+    <nav style={{
+      backgroundColor: 'var(--navbar-bg)',
+      color: 'var(--navbar-text)'
+    }}>
+      <div className="container-custom">
+        <div className="flex justify-between items-center h-16">
+          <Logo />
+
+          {/* Десктопне меню */}
+          <div className="hidden lg:flex lg:items-center lg:space-x-8">
+            {navigation.map((item) => (
+              <div key={item.name} className="relative group">
+                <div className="flex items-center space-x-1">
+                  <Link
+                    href={item.href}
+                    className="text-white hover:text-white/80 text-base font-medium"
+                  >
+                    {item.name}
+                  </Link>
+                  {item.submenu && (
+                    <ChevronRightIcon className="h-4 w-4 text-white group-hover:text-white/80 rotate-90" />
+                  )}
                 </div>
-              </div>
 
-              {/* Десктопне меню */}
-              <div className="hidden lg:ml-6 lg:flex lg:space-x-6">
-                {navigation.map((item) => (
-                  <div key={item.name} className="relative group">
-                    <Link
-                      href={item.href}
-                      className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 hover:text-indigo-600"
-                    >
-                      {item.name}
-                      {item.submenu && (
-                        <ChevronDownIcon className="ml-1 h-4 w-4" />
-                      )}
-                    </Link>
-                    {item.submenu && (
-                      <div className="absolute left-0 mt-2 w-60 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
-                        <div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden">
-                          <div className="relative grid gap-1 bg-white p-2">
-                            {item.submenu.map((subItem) => (
-                              <Link
-                                key={subItem.name}
-                                href={subItem.href}
-                                className="p-2 flex items-start rounded-lg hover:bg-gray-50"
-                              >
-                                <div className="text-sm font-medium text-gray-900">
-                                  {subItem.name}
-                                </div>
-                              </Link>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-
-              <div className="hidden lg:ml-6 lg:flex lg:items-center space-x-4">
-                {/* Перемикач теми */}
-                <button
-                  onClick={toggleTheme}
-                  className="rounded-md p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900"
-                >
-                  {isDarkMode ? (
-                    <SunIcon className="h-5 w-5" />
-                  ) : (
-                    <MoonIcon className="h-5 w-5" />
-                  )}
-                </button>
-
-                {/* Кнопка консультації */}
-                <Link
-                  href="/consultation"
-                  className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
-                >
-                  Безкоштовна консультація
-                </Link>
-              </div>
-
-              {/* Мобільне меню */}
-              <div className="flex items-center lg:hidden">
-                <Disclosure.Button className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500">
-                  <span className="sr-only">Відкрити головне меню</span>
-                  {open ? (
-                    <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
-                  ) : (
-                    <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
-                  )}
-                </Disclosure.Button>
-              </div>
-            </div>
-          </div>
-
-          {/* Мобільне меню панель */}
-          <Disclosure.Panel className="lg:hidden">
-            <div className="space-y-1 pb-3 pt-2">
-              {navigation.map((item) => (
-                <div key={item.name} className="border-b border-gray-200">
-                  <div className="flex items-center justify-between">
-                    <Link
-                      href={item.href}
-                      className="block py-2 pl-3 pr-4 text-base font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-800"
-                    >
-                      {item.name}
-                    </Link>
-                    {item.submenu && (
-                      <button
-                        onClick={() => toggleSubmenu(item.name)}
-                        className="p-2 text-gray-400 hover:text-gray-500"
-                      >
-                        <ChevronDownIcon
-                          className={`h-5 w-5 transform transition-transform ${
-                            openSubmenu === item.name ? 'rotate-180' : ''
-                          }`}
-                        />
-                      </button>
-                    )}
-                  </div>
-                  {item.submenu && openSubmenu === item.name && (
-                    <div className="pl-4 pb-2">
+                {item.submenu && (
+                  <div className="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                    <div className="py-1">
                       {item.submenu.map((subItem) => (
                         <Link
                           key={subItem.name}
                           href={subItem.href}
-                          className="block py-2 pl-3 pr-4 text-sm font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-700"
+                          className="block px-4 py-2 text-base text-[#7491a3] hover:bg-gray-50"
+                        >
+                          {subItem.name}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* Праві кнопки */}
+          <div className="hidden lg:flex lg:items-center lg:space-x-4">
+            <button 
+              onClick={toggleTheme}
+              className="p-2 text-white hover:text-white/80"
+            >
+              {theme === 'dark' ? (
+                <SunIcon className="h-5 w-5" />
+              ) : (
+                <MoonIcon className="h-5 w-5" />
+              )}
+            </button>
+            <Link
+              href="/consultation"
+              className="bg-white text-[#7491a3] px-6 py-2.5 rounded-md hover:bg-white/90 text-base font-medium"
+            >
+              Безкоштовна консультація
+            </Link>
+          </div>
+
+          {/* Кнопка мобільного меню */}
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="lg:hidden p-2 text-white hover:text-white/80"
+          >
+            {isMobileMenuOpen ? (
+              <XMarkIcon className="h-6 w-6" />
+            ) : (
+              <Bars3Icon className="h-6 w-6" />
+            )}
+          </button>
+        </div>
+
+        {/* Мобільне меню */}
+        <div
+          className={`lg:hidden fixed inset-0 z-50 bg-[#7491a3] transition-transform duration-300 ease-in-out ${
+            isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
+          }`}
+          style={{ top: '64px' }}
+        >
+          <div className="h-full overflow-y-auto">
+            <div className="divide-y divide-white/10">
+              {navigation.map((item) => (
+                <div key={item.name} className="py-2">
+                  <button
+                    onClick={() => handleMenuItemClick(item)}
+                    className="w-full px-4 py-2 flex items-center justify-between text-white hover:text-white/80"
+                  >
+                    <span className="text-sm font-medium">{item.name}</span>
+                    {item.submenu && (
+                      <ChevronRightIcon
+                        className={`h-5 w-5 transition-transform ${
+                          activeSubmenu === item.name ? 'rotate-90' : ''
+                        }`}
+                      />
+                    )}
+                  </button>
+                  {item.submenu && activeSubmenu === item.name && (
+                    <div className="bg-white/10 py-2">
+                      {item.submenu.map((subItem) => (
+                        <Link
+                          key={subItem.name}
+                          href={subItem.href}
+                          onClick={closeMobileMenu}
+                          className="block px-8 py-2 text-sm text-white hover:text-white/80"
                         >
                           {subItem.name}
                         </Link>
@@ -199,30 +197,30 @@ export default function Navbar() {
                   )}
                 </div>
               ))}
-              <div className="border-t border-gray-200 pt-4 pb-3">
-                <div className="flex items-center justify-between px-4">
-                  <button
-                    onClick={toggleTheme}
-                    className="rounded-md p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900"
-                  >
-                    {isDarkMode ? (
-                      <SunIcon className="h-5 w-5" />
-                    ) : (
-                      <MoonIcon className="h-5 w-5" />
-                    )}
-                  </button>
-                  <Link
-                    href="/consultation"
-                    className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
-                  >
-                    Безкоштовна консультація
-                  </Link>
-                </div>
+              <div className="p-4 space-y-4">
+                <button 
+                  onClick={toggleTheme}
+                  className="flex items-center text-white hover:text-white/80"
+                >
+                  {theme === 'dark' ? (
+                    <SunIcon className="h-5 w-5 mr-2" />
+                  ) : (
+                    <MoonIcon className="h-5 w-5 mr-2" />
+                  )}
+                  <span>Змінити тему</span>
+                </button>
+                <Link
+                  href="/consultation"
+                  onClick={closeMobileMenu}
+                  className="block w-full bg-white text-[#7491a3] px-4 py-2 rounded-md hover:bg-white/90 text-sm font-medium text-center"
+                >
+                  Безкоштовна консультація
+                </Link>
               </div>
             </div>
-          </Disclosure.Panel>
-        </>
-      )}
-    </Disclosure>
+          </div>
+        </div>
+      </div>
+    </nav>
   )
 }

@@ -33,7 +33,7 @@ export default function LoginPage() {
 
       router.push('/')
       router.refresh()
-    } catch (error) {
+    } catch (_error) {
       setError('Щось пішло не так. Спробуйте пізніше.')
     } finally {
       setIsLoading(false)

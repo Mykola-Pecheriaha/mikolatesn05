@@ -1,6 +1,7 @@
 import './globals.css'
 import { Inter } from 'next/font/google'
 import { NextAuthProvider } from '@/components/providers'
+import { ThemeProvider } from '@/context/ThemeContext'
 import Header from '@/components/Header/Header'
 
 const inter = Inter({ subsets: ['latin', 'cyrillic'] })
@@ -19,8 +20,10 @@ export default function RootLayout({
     <html lang="uk">
       <body className={inter.className}>
         <NextAuthProvider>
-          <Header />
-          <main className="min-h-screen">{children}</main>
+          <ThemeProvider>
+            <Header />
+            <main className="min-h-screen">{children}</main>
+          </ThemeProvider>
         </NextAuthProvider>
       </body>
     </html>

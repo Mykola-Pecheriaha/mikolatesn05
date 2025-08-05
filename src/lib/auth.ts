@@ -1,4 +1,3 @@
-import { PrismaAdapter } from "@auth/prisma-adapter"
 import { NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import { prisma } from "./prisma"
@@ -72,6 +71,5 @@ export const authOptions: NextAuthOptions = {
       return session
     }
   },
-  adapter: PrismaAdapter(prisma),
   secret: process.env.NEXTAUTH_SECRET,
 }

@@ -7,42 +7,46 @@ import {
   faInstagram,
   faFacebookMessenger
 } from '@fortawesome/free-brands-svg-icons'
-import { faPhone, faEnvelope, faLocationDot, faClock } from '@fortawesome/free-solid-svg-icons'
+import { 
+  PhoneIcon, 
+  EnvelopeIcon, 
+  MapPinIcon, 
+  ClockIcon 
+} from '@heroicons/react/24/outline'
 
 export default function TopBar() {
   return (
-    <div className="bg-gray-900 text-white py-2">
-      <div className="container-custom">
-        <div className="flex justify-between items-center text-sm">
+    <div style={{ 
+      backgroundColor: 'var(--topbar-bg)',
+      color: 'var(--topbar-text)'
+    }}>
+      <div className="container-custom py-2">
+        <div className="flex justify-between items-center">
+          {/* Контактна інформація */}
           <div className="hidden lg:flex space-x-6">
-            {/* Контактна інформація */}
+            <a href="tel:+380507575411" className="flex items-center hover:opacity-80">
+              <PhoneIcon className="h-4 w-4 mr-2" />
+              <span>+380 (50) 757-54-11</span>
+            </a>
+            <a href="mailto:Pecheryag@gmail.com" className="flex items-center hover:opacity-80">
+              <EnvelopeIcon className="h-4 w-4 mr-2" />
+              <span>Pecheryag@gmail.com</span>
+            </a>
             <div className="flex items-center">
-              <FontAwesomeIcon icon={faPhone} className="w-4 h-4 mr-2" />
-              <a href="tel:+380507575411" className="hover:text-gray-300 transition-colors">
-                +380 (50) 757-54-11
-              </a>
-            </div>
-            <div className="flex items-center">
-              <FontAwesomeIcon icon={faEnvelope} className="w-4 h-4 mr-2" />
-              <a href="mailto:Pecheryag@gmail.com" className="hover:text-gray-300 transition-colors">
-                Pecheryag@gmail.com
-              </a>
-            </div>
-            <div className="flex items-center">
-              <FontAwesomeIcon icon={faLocationDot} className="w-4 h-4 mr-2" />
+              <MapPinIcon className="h-4 w-4 mr-2" />
               <span>м. Чернівці, вул. Героїв Майдану, 226</span>
             </div>
             <div className="flex items-center">
-              <FontAwesomeIcon icon={faClock} className="w-4 h-4 mr-2" />
+              <ClockIcon className="h-4 w-4 mr-2" />
               <span>Пн-Пт: 9:00-16:00</span>
             </div>
           </div>
 
           {/* Мобільна версія - тільки телефон */}
-          <div className="lg:hidden flex items-center">
-            <FontAwesomeIcon icon={faPhone} className="w-4 h-4 mr-2" />
-            <a href="tel:+380507575411" className="hover:text-gray-300 transition-colors">
-              +380 (50) 757-54-11
+          <div className="lg:hidden">
+            <a href="tel:+380507575411" className="flex items-center hover:opacity-80">
+              <PhoneIcon className="h-4 w-4 mr-2" />
+              <span>+380 (50) 757-54-11</span>
             </a>
           </div>
 
@@ -52,37 +56,37 @@ export default function TopBar() {
               href="https://facebook.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-gray-300 transition-colors"
+              className="hover:opacity-80 transition-opacity"
               aria-label="Facebook"
             >
-              <FontAwesomeIcon icon={faFacebookF} className="w-4 h-4" />
+              <FontAwesomeIcon icon={faFacebookF} className="h-4 w-4" />
             </a>
             <a
               href="https://youtube.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-gray-300 transition-colors"
+              className="hover:opacity-80 transition-opacity"
               aria-label="YouTube"
             >
-              <FontAwesomeIcon icon={faYoutube} className="w-4 h-4" />
+              <FontAwesomeIcon icon={faYoutube} className="h-4 w-4" />
             </a>
             <a
               href="https://instagram.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-gray-300 transition-colors"
+              className="hover:opacity-80 transition-opacity"
               aria-label="Instagram"
             >
-              <FontAwesomeIcon icon={faInstagram} className="w-4 h-4" />
+              <FontAwesomeIcon icon={faInstagram} className="h-4 w-4" />
             </a>
             <a
               href="https://m.me/"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-gray-300 transition-colors"
+              className="hover:opacity-80 transition-opacity"
               aria-label="Messenger"
             >
-              <FontAwesomeIcon icon={faFacebookMessenger} className="w-4 h-4" />
+              <FontAwesomeIcon icon={faFacebookMessenger} className="h-4 w-4" />
             </a>
           </div>
         </div>
