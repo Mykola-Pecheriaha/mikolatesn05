@@ -1,0 +1,98 @@
+// This is your Prisma schema file
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  password      String
+  role          Role      @default(PATIENT)
+  firstName     String
+  lastName      String
+  phoneNumber   String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  appointments  Appointment[]
+  doctor        Doctor?
+  patient       Patient?
+}
+
+model Doctor {
+  id            String    @id @default(cuid())
+  user          User      @relation(fields: [userId], references: [id])
+  userId        String    @unique
+  specialization String
+  experience    Int
+  about         String?
+  appointments  Appointment[]
+  schedule      Schedule[]
+  services      Service[]
+}
+
+model Patient {
+  id            String    @id @default(cuid())
+  user          User      @relation(fields: [userId], references: [id])
+  userId        String    @unique
+  dateOfBirth   DateTime?
+  bloodType     String?
+  allergies     String?
+  medicalHistory String?
+  appointments  Appointment[]
+}
+
+model Appointment {
+  id            String    @id @default(cuid())
+  doctor        Doctor    @relation(fields: [doctorId], references: [id])
+  doctorId      String
+  patient       Patient   @relation(fields: [patientId], references: [id])
+  patientId     String
+  service       Service   @relation(fields: [serviceId], references: [id])
+  serviceId     String
+  date          DateTime
+  status        AppointmentStatus @default(PENDING)
+  notes         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  user          User      @relation(fields: [userId], references: [id])
+  userId        String
+}
+
+model Service {
+  id            String    @id @default(cuid())
+  name          String
+  description   String
+  price         Float
+  duration      Int       // in minutes
+  doctor        Doctor    @relation(fields: [doctorId], references: [id])
+  doctorId      String
+  appointments  Appointment[]
+}
+
+model Schedule {
+  id            String    @id @default(cuid())
+  doctor        Doctor    @relation(fields: [doctorId], references: [id])
+  doctorId      String
+  dayOfWeek     Int       // 1-7 (Monday-Sunday)
+  startTime     String    // Format: "HH:mm"
+  endTime       String    // Format: "HH:mm"
+  isAvailable   Boolean   @default(true)
+}
+
+enum Role {
+  ADMIN
+  DOCTOR
+  PATIENT
+}
+
+enum AppointmentStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
