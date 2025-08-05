@@ -12,7 +12,7 @@ import { faPhone, faEnvelope, faLocationDot, faClock } from '@fortawesome/free-s
 export default function TopBar() {
   return (
     <div className="bg-gray-900 text-white py-2">
-      <div className="container mx-auto px-4">
+      <div className="container-custom">
         <div className="flex justify-between items-center text-sm">
           <div className="hidden lg:flex space-x-6">
             {/* Контактна інформація */}

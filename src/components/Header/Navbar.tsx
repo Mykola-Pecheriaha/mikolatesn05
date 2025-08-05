@@ -2,7 +2,7 @@
 
 import { Fragment, useState } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
-import { Bars3Icon, XMarkIcon, SunIcon, MoonIcon } from '@heroicons/react/24/outline'
+import { Bars3Icon, XMarkIcon, SunIcon, MoonIcon, ChevronDownIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
 import Logo from './Logo'
 
@@ -64,17 +64,22 @@ const navigation = [
 
 export default function Navbar() {
   const [isDarkMode, setIsDarkMode] = useState(false)
+  const [openSubmenu, setOpenSubmenu] = useState<string | null>(null)
 
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode)
     // Тут буде логіка зміни теми
   }
 
+  const toggleSubmenu = (itemName: string) => {
+    setOpenSubmenu(openSubmenu === itemName ? null : itemName)
+  }
+
   return (
     <Disclosure as="nav" className="bg-white border-b border-gray-200">
       {({ open }) => (
         <>
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="container-custom">
             <div className="flex h-16 justify-between">
               <div className="flex">
                 <div className="flex flex-shrink-0 items-center">
@@ -91,6 +96,9 @@ export default function Navbar() {
                       className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 hover:text-indigo-600"
                     >
                       {item.name}
+                      {item.submenu && (
+                        <ChevronDownIcon className="ml-1 h-4 w-4" />
+                      )}
                     </Link>
                     {item.submenu && (
                       <div className="absolute left-0 mt-2 w-60 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
@@ -155,29 +163,41 @@ export default function Navbar() {
           <Disclosure.Panel className="lg:hidden">
             <div className="space-y-1 pb-3 pt-2">
               {navigation.map((item) => (
-                <Fragment key={item.name}>
-                  <Disclosure.Button
-                    as={Link}
-                    href={item.href}
-                    className="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-800"
-                  >
-                    {item.name}
-                  </Disclosure.Button>
-                  {item.submenu && (
-                    <div className="pl-4">
+                <div key={item.name} className="border-b border-gray-200">
+                  <div className="flex items-center justify-between">
+                    <Link
+                      href={item.href}
+                      className="block py-2 pl-3 pr-4 text-base font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-800"
+                    >
+                      {item.name}
+                    </Link>
+                    {item.submenu && (
+                      <button
+                        onClick={() => toggleSubmenu(item.name)}
+                        className="p-2 text-gray-400 hover:text-gray-500"
+                      >
+                        <ChevronDownIcon
+                          className={`h-5 w-5 transform transition-transform ${
+                            openSubmenu === item.name ? 'rotate-180' : ''
+                          }`}
+                        />
+                      </button>
+                    )}
+                  </div>
+                  {item.submenu && openSubmenu === item.name && (
+                    <div className="pl-4 pb-2">
                       {item.submenu.map((subItem) => (
-                        <Disclosure.Button
+                        <Link
                           key={subItem.name}
-                          as={Link}
                           href={subItem.href}
-                          className="block border-l-4 border-transparent py-2 pl-3 pr-4 text-sm font-medium text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700"
+                          className="block py-2 pl-3 pr-4 text-sm font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-700"
                         >
                           {subItem.name}
-                        </Disclosure.Button>
+                        </Link>
                       ))}
                     </div>
                   )}
-                </Fragment>
+                </div>
               ))}
               <div className="border-t border-gray-200 pt-4 pb-3">
                 <div className="flex items-center justify-between px-4">
