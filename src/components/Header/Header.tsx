@@ -4,9 +4,13 @@ import TopBar from './TopBar'
 import Navbar from './Navbar'
 import Breadcrumbs from './Breadcrumbs'
 
-export default function Header() {
+interface HeaderProps {
+  className?: string;
+}
+
+export default function Header({ className = '' }: HeaderProps) {
   return (
-    <header className="sticky top-0 z-50">
+    <header className={`sticky top-0 z-50 ${className}`}>
       <TopBar />
       <Navbar />
       <Breadcrumbs />

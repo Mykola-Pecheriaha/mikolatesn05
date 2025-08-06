@@ -14,14 +14,18 @@ const routeNames: { [key: string]: string } = {
   consultation: 'Консультація',
 }
 
-export default function Breadcrumbs() {
+interface BreadcrumbsProps {
+  className?: string;
+}
+
+export default function Breadcrumbs({ className = '' }: BreadcrumbsProps) {
   const pathname = usePathname()
   const paths = pathname.split('/').filter(path => path)
 
   if (pathname === '/') return null
 
   return (
-    <div className="bg-gray-50 border-b border-gray-200">
+    <div className={`bg-gray-50 border-b border-gray-200 ${className}`}>
       <div className="container-custom py-2">
         <nav className="flex items-center text-sm">
           <Link 

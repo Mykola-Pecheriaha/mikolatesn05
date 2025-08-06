@@ -3,9 +3,13 @@
 import Link from 'next/link'
 import Image from 'next/image'
 
-export default function Logo() {
+interface LogoProps {
+  className?: string;
+}
+
+export default function Logo({ className = '' }: LogoProps) {
   return (
-    <Link href="/" className="flex items-center space-x-2">
+    <Link href="/" className={`flex items-center space-x-2 ${className}`}>
       <div className="relative w-10 h-10">
         <Image
           src="/images/logo/logo.bmp"
