@@ -19,35 +19,47 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" }
       },
       async authorize(credentials) {
+        console.log('Authorizing with credentials:', { email: credentials?.email });
+
         if (!credentials?.email || !credentials?.password) {
-          throw new Error('Необхідно ввести email та пароль')
+          console.log('Missing credentials');
+          throw new Error('Необхідно ввести email та пароль');
         }
 
         const user = await prisma.user.findUnique({
           where: {
             email: credentials.email
           }
-        })
+        });
+
+        console.log('Found user:', user ? { id: user.id, email: user.email, role: user.role } : 'null');
 
         if (!user) {
-          throw new Error('Користувача не знайдено')
+          console.log('User not found');
+          throw new Error('Користувача не знайдено');
         }
 
         const isPasswordValid = await bcrypt.compare(
           credentials.password,
           user.password
-        )
+        );
+
+        console.log('Password validation:', { isValid: isPasswordValid });
 
         if (!isPasswordValid) {
-          throw new Error('Невірний пароль')
+          console.log('Invalid password');
+          throw new Error('Невірний пароль');
         }
 
-        return {
+        const userData = {
           id: user.id,
           email: user.email,
           role: user.role,
           name: `${user.firstName} ${user.lastName}`
-        }
+        };
+
+        console.log('Returning user data:', userData);
+        return userData;
       }
     })
   ],

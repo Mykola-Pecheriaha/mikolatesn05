@@ -12,7 +12,7 @@ export default function Logo({ className = '' }: LogoProps) {
     <Link href="/" className={`flex items-center space-x-2 ${className}`}>
       <div className="relative w-10 h-10">
         <Image
-          src="/images/logo/logo.bmp"
+          src="/images/logo/logozmk7.jpg"
           alt="ЦМКЛ Логотип"
           width={40}
           height={40}

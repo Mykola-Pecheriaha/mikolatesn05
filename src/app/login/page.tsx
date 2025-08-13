@@ -20,20 +20,36 @@ export default function LoginPage() {
     const password = formData.get('password') as string
 
     try {
+      // Спочатку перевіримо облікові дані через debug endpoint
+      const debugResponse = await fetch('/api/auth/debug', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+      
+      const debugResult = await debugResponse.json();
+      console.log('Debug auth result:', debugResult);
+
+      // Спробуємо увійти
+      console.log('Attempting to sign in with:', { email });
       const result = await signIn('credentials', {
         email,
         password,
         redirect: false,
-      })
+      });
+
+      console.log('Sign in result:', result);
 
       if (result?.error) {
-        setError('Невірний email або пароль')
-        return
+        console.error('Sign in error:', result.error);
+        setError('Невірний email або пароль');
+        return;
       }
 
-      router.push('/')
-      router.refresh()
-    } catch (_error) {
+      console.log('Sign in successful, redirecting...');
+      router.push('/');
+      router.refresh();
+  } catch {
       setError('Щось пішло не так. Спробуйте пізніше.')
     } finally {
       setIsLoading(false)

@@ -5,6 +5,7 @@ import Link from 'next/link'
 import Logo from './Logo'
 import { Bars3Icon, XMarkIcon, ChevronRightIcon, MoonIcon, SunIcon } from '@heroicons/react/24/outline'
 import { useTheme } from '@/context/ThemeContext'
+import ConsultationModal from '../ConsultationForm/ConsultationModal'
 
 const navigation = [
   {
@@ -66,6 +67,7 @@ export default function Navbar() {
   const { theme, toggleTheme } = useTheme()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null)
+  const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false)
 
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false)
@@ -136,12 +138,12 @@ export default function Navbar() {
                 <MoonIcon className="h-5 w-5" />
               )}
             </button>
-            <Link
-              href="/consultation"
+            <button
+              onClick={() => setIsConsultationModalOpen(true)}
               className="bg-white text-[#7491a3] px-6 py-2.5 rounded-md hover:bg-white/90 text-base font-medium"
             >
               Безкоштовна консультація
-            </Link>
+            </button>
           </div>
 
           {/* Кнопка мобільного меню */}
@@ -209,18 +211,25 @@ export default function Navbar() {
                   )}
                   <span>Змінити тему</span>
                 </button>
-                <Link
-                  href="/consultation"
-                  onClick={closeMobileMenu}
+                <button
+                  onClick={() => {
+                    closeMobileMenu();
+                    setIsConsultationModalOpen(true);
+                  }}
                   className="block w-full bg-white text-[#7491a3] px-4 py-2 rounded-md hover:bg-white/90 text-sm font-medium text-center"
                 >
                   Безкоштовна консультація
-                </Link>
+                </button>
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      <ConsultationModal
+        isOpen={isConsultationModalOpen}
+        onClose={() => setIsConsultationModalOpen(false)}
+      />
     </nav>
   )
 }
